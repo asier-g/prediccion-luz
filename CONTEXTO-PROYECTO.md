@@ -44,6 +44,8 @@ Previsión abierta del precio horario del mercado diario de OMIE (España) de **
 - Energy Price Forecast EU (sin España por ahora), Energyforecast.de (solo Alemania), AleaSoft (B2B).
 
 ## Hoja de ruta sugerida
+_Versión inicial. La hoja de ruta viva, con tareas y criterios de aceptación, está en `PLAN.md`._
+
 1. **Repo y canal de datos:** descarga diaria e incremental de OMIE y la meteorología, en un formato ordenado (Parquet o SQLite), con pruebas.
 2. **Evaluación como código:** reproducir el baseline como suite fija. El mismo periodo de prueba, métricas (MAE por horizonte, decisiones prácticas) e IC por bootstrap. Ningún modelo nuevo se acepta sin pasar por ella.
 3. **Mejoras del modelo, por orden:**
