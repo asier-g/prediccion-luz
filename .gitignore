@@ -1,0 +1,27 @@
+# Entorno virtual
+.venv/
+
+# Datos descargados (se regeneran con baseline/descarga_datos.py)
+baseline/datos/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Editores y sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Documentos personales y de negocio (solo en local)
+investigacion/01-idea.md
+investigacion/03-mercado-y-monetizacion.md
+investigacion/fuentes.md
+
+# Configuración local y secretos
+.claude/settings.local.json
+CLAUDE.local.md
+.env
