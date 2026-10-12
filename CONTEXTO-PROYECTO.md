@@ -5,7 +5,9 @@ _Preparado el 2026-10-11 a partir de la investigación del banco de ideas. Es el
 ## Objetivo
 Previsión abierta del precio horario del mercado diario de OMIE (España) de **D+2 a D+7**, con su incertidumbre y su error real publicado, integrada en Home Assistant (HACS) y evcc.
 
-**Para qué:** es un proyecto de portfolio para que el autor entre en un departamento de IA. Tiene que estar en producción, tener algunos usuarios reales y enseñar ML/DL sobre series temporales con resultados medidos con rigor. No se espera ganar dinero (ver `investigacion/03-mercado-y-monetizacion.md`).
+**Para qué:** es un proyecto de portfolio para que el autor entre en un departamento de IA. Tiene que estar en producción, tener algunos usuarios reales y enseñar ML/DL sobre series temporales con resultados medidos con rigor.
+
+**Después, posible comercialización** como API para empresas con consumo flexible (regantes, frío industrial, baterías, flotas). No para particulares: el modelo les ahorra 3–4 €/año frente a reglas gratuitas. **Ninguna decisión de hoy debe cerrar esa puerta:** licencia del código, condiciones de uso de las fuentes de datos y alojamiento.
 
 **Autor:** estudiante de último curso de informática y ciencia de datos. Unas 5 h/semana, desarrollando con un agente de IA. Prefiere ML/DL a visión por computador y distribución por internet antes que vender.
 
@@ -29,21 +31,24 @@ Previsión abierta del precio horario del mercado diario de OMIE (España) de **
 
 | Fuente | Qué | Acceso | Cuidado con |
 |---|---|---|---|
-| OMIE `marginalpdbc` | Precio marginal diario; 6ª columna = España | `https://www.omie.es/es/file-download?parents%5B0%5D=marginalpdbc&filename=marginalpdbc_AAAAMMDD.1`, gratis y sin clave | **Desde el 1-10-2025, 96 periodos de 15 min** (antes 24). Días de cambio de hora: 23 o 25 periodos (92 o 100). Condiciones de reutilización sin verificar. Descarga lenta: usar 4 hilos como máximo |
+| OMIE `marginalpdbc` | Precio marginal diario; 6ª columna = España | `https://www.omie.es/es/file-download?parents%5B0%5D=marginalpdbc&filename=marginalpdbc_AAAAMMDD.1`, gratis y sin clave | **Desde el 1-10-2025, 96 periodos de 15 min** (antes 24). Días de cambio de hora: 23 o 25 periodos (92 o 100). Uso libre citando la fuente (ver "Condiciones de uso de las fuentes" en `ARQUITECTURA.md`). Descarga lenta: usar 4 hilos como máximo |
 | Open-Meteo Previous Runs API | Previsiones emitidas 1–7 días antes (`*_previous_dayK`) | `https://previous-runs-api.open-meteo.com/v1/forecast` | Viento previsto solo desde febrero de 2024. **Verificar la hora exacta de emisión de `previous_dayK`** (posible fuga de unas horas). Gratis **solo sin uso comercial** (< 10.000 llamadas al día); CC BY 4.0, hay que citarlo. Peticiones de varios años tardan minutos |
 | Open-Meteo Forecast API | Previsión actual para producción | `https://api.open-meteo.com/v1/forecast` | Mismas condiciones |
-| ESIOS (Red Eléctrica) | Previsiones oficiales de demanda, eólica y solar; PVPC | Token personal gratuito (se pide por correo) | **Aún no se ha usado: es la mejora más prometedora** |
+| ESIOS (Red Eléctrica) | Previsiones oficiales de demanda, eólica y solar; PVPC | Token personal gratuito (se pide por correo) | Aún no se ha usado. **Por comprobar antes de contar con ella** (tarea 1.6 de `PLAN.md`): si sus previsiones llegan a D+2–D+7 y si guarda cada versión de la previsión o solo la última |
 | Gas (MIBGAS, TTF) | Fija el precio en muchas horas | Por investigar | Sin fuente gratuita verificada |
 
 `baseline/datos/` incluye los datos ya descargados (2023 a 11-10-2026), si se copiaron. Si no, se regeneran con `baseline/descarga_datos.py` (15–25 min).
 
 ## Competencia a tener en cuenta
-- **EpexPredictor** (https://github.com/b3nn0/epexpredictor): gratis y abierto, ya cubre España a 1–3 días con LightGBM, Open-Meteo, carga y gas, y API pública. MAE publicado para España a 1 día: 1,68 (unidades sin confirmar, probablemente ct/kWh) con meteorología observada.
+- **EpexPredictor** (https://github.com/b3nn0/epexpredictor): gratis y abierto (BSD-3), ya cubre España a 1–3 días con LightGBM, Open-Meteo, carga y gas, y API pública sin garantías de servicio. **evcc ya lo integra de forma nativa.** MAE publicado para España a 1 día: 1,68 (unidades sin confirmar, probablemente ct/kWh) con meteorología observada, no prevista. Comprobado el 2026-10-12.
   - **Primera tarea:** guardar cada día su previsión y compararla con la propia.
   - Si no se le gana en D+2 o D+3, diferenciarse en 4–7 días, cuantiles, precio final por tarifa e integración en español.
-- Energy Price Forecast EU (sin España por ahora), Energyforecast.de (solo Alemania), AleaSoft (B2B).
+- **AleaSoft:** consultora de previsión para empresas desde 1999, en más de 45 mercados, MIBEL incluido. Corto, medio y largo plazo. Precios no publicados. Es la competencia si se comercializa para empresas.
+- Energy Price Forecast EU (sin España por ahora), Energyforecast.de (solo Alemania).
 
 ## Hoja de ruta sugerida
+_Versión inicial. La hoja de ruta viva, con tareas y criterios de aceptación, está en `PLAN.md`._
+
 1. **Repo y canal de datos:** descarga diaria e incremental de OMIE y la meteorología, en un formato ordenado (Parquet o SQLite), con pruebas.
 2. **Evaluación como código:** reproducir el baseline como suite fija. El mismo periodo de prueba, métricas (MAE por horizonte, decisiones prácticas) e IC por bootstrap. Ningún modelo nuevo se acepta sin pasar por ella.
 3. **Mejoras del modelo, por orden:**

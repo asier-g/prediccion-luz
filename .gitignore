@@ -3,6 +3,7 @@
 
 # Datos descargados (se regeneran con baseline/descarga_datos.py)
 baseline/datos/
+/datos/
 
 # Python
 __pycache__/
