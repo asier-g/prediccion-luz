@@ -5,7 +5,9 @@ _Preparado el 2026-10-11 a partir de la investigación del banco de ideas. Es el
 ## Objetivo
 Previsión abierta del precio horario del mercado diario de OMIE (España) de **D+2 a D+7**, con su incertidumbre y su error real publicado, integrada en Home Assistant (HACS) y evcc.
 
-**Para qué:** es un proyecto de portfolio para que el autor entre en un departamento de IA. Tiene que estar en producción, tener algunos usuarios reales y enseñar ML/DL sobre series temporales con resultados medidos con rigor. No se espera ganar dinero (ver `investigacion/03-mercado-y-monetizacion.md`).
+**Para qué:** es un proyecto de portfolio para que el autor entre en un departamento de IA. Tiene que estar en producción, tener algunos usuarios reales y enseñar ML/DL sobre series temporales con resultados medidos con rigor.
+
+**Después, posible comercialización** como API para empresas con consumo flexible (regantes, frío industrial, baterías, flotas). No para particulares: el modelo les ahorra 3–4 €/año frente a reglas gratuitas. **Ninguna decisión de hoy debe cerrar esa puerta:** licencia del código, condiciones de uso de las fuentes de datos y alojamiento.
 
 **Autor:** estudiante de último curso de informática y ciencia de datos. Unas 5 h/semana, desarrollando con un agente de IA. Prefiere ML/DL a visión por computador y distribución por internet antes que vender.
 
@@ -38,10 +40,11 @@ Previsión abierta del precio horario del mercado diario de OMIE (España) de **
 `baseline/datos/` incluye los datos ya descargados (2023 a 11-10-2026), si se copiaron. Si no, se regeneran con `baseline/descarga_datos.py` (15–25 min).
 
 ## Competencia a tener en cuenta
-- **EpexPredictor** (https://github.com/b3nn0/epexpredictor): gratis y abierto, ya cubre España a 1–3 días con LightGBM, Open-Meteo, carga y gas, y API pública. MAE publicado para España a 1 día: 1,68 (unidades sin confirmar, probablemente ct/kWh) con meteorología observada.
+- **EpexPredictor** (https://github.com/b3nn0/epexpredictor): gratis y abierto (BSD-3), ya cubre España a 1–3 días con LightGBM, Open-Meteo, carga y gas, y API pública sin garantías de servicio. **evcc ya lo integra de forma nativa.** MAE publicado para España a 1 día: 1,68 (unidades sin confirmar, probablemente ct/kWh) con meteorología observada, no prevista. Comprobado el 2026-10-12.
   - **Primera tarea:** guardar cada día su previsión y compararla con la propia.
   - Si no se le gana en D+2 o D+3, diferenciarse en 4–7 días, cuantiles, precio final por tarifa e integración en español.
-- Energy Price Forecast EU (sin España por ahora), Energyforecast.de (solo Alemania), AleaSoft (B2B).
+- **AleaSoft:** consultora de previsión para empresas desde 1999, en más de 45 mercados, MIBEL incluido. Corto, medio y largo plazo. Precios no publicados. Es la competencia si se comercializa para empresas.
+- Energy Price Forecast EU (sin España por ahora), Energyforecast.de (solo Alemania).
 
 ## Hoja de ruta sugerida
 _Versión inicial. La hoja de ruta viva, con tareas y criterios de aceptación, está en `PLAN.md`._

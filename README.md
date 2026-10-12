@@ -39,5 +39,8 @@ python -m venv .venv
 - Precios: [OMIE](https://www.omie.es/), mercado diario.
 - Meteorología prevista: [Open-Meteo](https://open-meteo.com/), Previous Runs API, con licencia [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
+## Licencia
+Por ahora, todos los derechos reservados. Las integraciones para Home Assistant y evcc se publicarán con licencia abierta.
+
 ## Aviso
 Es una previsión orientativa, no el precio oficial. El precio oficial es el que publica OMIE.

@@ -12,9 +12,10 @@ Pasos para llevar el baseline a producción. El porqué de cada paso está en `C
 ## Fase 0. Preparación
 - [x] Repositorio, baseline, `CONTEXTO-PROYECTO.md` y `CLAUDE.md` (2026-10-11).
 - [x] `README.md`, `PLAN.md` y `ARQUITECTURA.md` (2026-10-11).
-- [ ] 👤 Elegir licencia del código (p. ej. MIT o Apache-2.0) y añadir `LICENSE`.
+- [x] Licencia (2026-10-12): el repo principal queda **sin licencia** (todos los derechos reservados) para no cerrar una comercialización futura. Las integraciones de la fase 5 irán en repos aparte con MIT.
 - [ ] 👤 Configurar el entorno en la nube de Claude Code: red **Custom** con `www.omie.es` y `*.open-meteo.com`, más la lista por defecto.
-- [ ] 👤 Pedir el token personal de ESIOS (consultasios@ree.es) y guardarlo como secreto, nunca en el repo.
+- [ ] 👤 Pedir el token personal de ESIOS (consultasios@ree.es) y guardarlo como secreto, nunca en el repo. Leer sus condiciones de uso, también para uso comercial.
+- [ ] 👤 **Antes de la fase 2:** verificar las condiciones de reutilización de OMIE, incluido el uso comercial. Si no lo permiten, es el mayor riesgo del proyecto: no tiene sustituto.
 
 ## Fase 1. Canal de datos
 - [ ] **1.1 Esqueleto del paquete.** `pyproject.toml`, paquete en `src/prediccion_luz/`, `pytest` y `ruff`. Workflow de GitHub Actions que pasa las pruebas en cada PR.
@@ -56,9 +57,15 @@ Cada mejora es un experimento que pasa por la suite de la 2.2. Se acepta solo si
 - [ ] **4.5 Avisos de fallo.** Si la previsión de un día falla, se abre un *issue* automáticamente.
 
 ## Fase 5. Integraciones
-- [ ] **5.1 Sensor de Home Assistant** instalable por HACS, en español, que lee el JSON público.
-- [ ] **5.2 Plantilla para evcc** y PR a su repositorio.
+- [ ] **5.1 Sensor de Home Assistant** instalable por HACS, en español, que lee el JSON público. En un repo aparte, con licencia MIT.
+- [ ] **5.2 Plantilla para evcc** y PR a su repositorio. evcc ya integra EpexPredictor (1–3 días): la plantilla tiene que aportar lo que él no da (D+4 a D+7 y cuantiles).
 - [ ] **5.3 Artículo** con el experimento y los resultados, para difundir en foros de Home Assistant, evcc y coche eléctrico.
 
 ## Fase 6. Después
 - [ ] Precio final por tarifa: PVPC (55 % a plazo en 2026) e indexadas (Octopus, Som Energia).
+
+## Fase 7. Posible comercialización (sin detallar)
+- [ ] 👤 Decidir la licencia definitiva del repo principal: AGPL-3.0, MIT o seguir reservado.
+- [ ] Meteorología con uso comercial: plan de pago de Open-Meteo o fuente alternativa (comprobar los datos abiertos del ECMWF).
+- [ ] API de pago fuera de GitHub Pages, cuyas condiciones no permiten usarlo como base de un negocio.
+- [ ] 👤 Validar la demanda con 3–5 empresas de consumo flexible antes de construir nada.
