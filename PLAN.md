@@ -46,7 +46,7 @@ Cada mejora es un experimento que pasa por la suite de la 2.2. Se acepta solo si
 - [ ] **3.4 Precio del gas** (MIBGAS o TTF). Antes: encontrar una fuente gratuita con histórico y condiciones de uso claras.
 - [ ] **3.5 Previsión probabilística.** Cuantiles 10, 50 y 90. Medir la cobertura y la pérdida *pinball*.
   Aceptado: cobertura del intervalo 10–90 entre el 75 % y el 85 % en la prueba.
-- [ ] **3.6 Deep learning.** N-HiTS o TFT con PyTorch en CPU, con salida multihorizonte. Comparado en la suite contra el mejor modelo tabular.
+- [ ] **3.6 Deep learning.** N-HiTS o TFT con PyTorch, con salida multihorizonte. Comparado en la suite contra el mejor modelo tabular. Para experimentar se puede usar GPU gratuita (Kaggle o Colab), pero el modelo elegido debe reentrenarse en CPU en un tiempo razonable (principio 6 de `ARQUITECTURA.md`).
 
 ## Fase 4. Producción
 - [ ] **4.1 Previsión diaria en GitHub Actions.** Se lanza cuando OMIE ha publicado D+1. Comprueba que el dato está antes de prever y reintenta si no. Guarda cada previsión emitida en un archivo que solo crece.

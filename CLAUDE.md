@@ -31,5 +31,5 @@ Previsión abierta del precio horario de la luz en España (mercado diario de OM
 - **PR pequeños, que se revisen en unos 10 minutos.** Rellena todas las secciones de `.github/pull_request_template.md`. En "Dónde mirar con lupa", señala siempre el código que toque el corte temporal, la evaluación, las métricas o el parseo de OMIE.
 - En la tabla de decisiones de `ARQUITECTURA.md`, propón el motivo, pero márcalo como "(pendiente de revisar por el autor)": el autor lo reescribe con sus palabras.
 - `baseline/` está congelado: no se modifica, sirve de referencia.
-- No hace falta GPU. Vigilar el coste de cálculo: el portátil del autor es un i5-1335U.
+- Producción solo en CPU; los experimentos pesados pueden ir a GPU gratuita (Kaggle o Colab). Ver el principio 6 de `ARQUITECTURA.md`. Vigilar el coste de cálculo: el portátil del autor es un i5-1335U y las sesiones en la nube no son para entrenamientos de horas.
 - Documentación, comentarios y mensajes de commit en español.
