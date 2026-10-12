@@ -25,7 +25,8 @@ Pasos para llevar el baseline a producción. El porqué de cada paso está en `C
 ## Fase 1. Canal de datos y archivos
 - [x] **1.1 Esqueleto del paquete.** (2026-10-12, PR pendiente de enlazar) `pyproject.toml`, paquete en `src/prediccion_luz/`, `pytest` y `ruff`. Workflow de GitHub Actions que pasa las pruebas en cada PR.
   Aceptado: `pytest` pasa en local y en Actions.
-- [ ] **1.2 Archivo diario de EpexPredictor.** Workflow diario que guarda su previsión para España **a la hora de nuestro corte** (D a las 15:00, Madrid), para que la comparación de la 3.4 sea justa. Se guarda con un commit en la rama `archivo` (decisión de `ARQUITECTURA.md`), lo que además mantiene el repo activo: GitHub desactiva los workflows programados tras 60 días sin actividad. El archivo es público: avisar a su autor (*issue* o correo) al empezar.
+- [ ] **1.2 Archivo diario de EpexPredictor.** Workflow diario que guarda su previsión para España **a la hora de nuestro corte** (D a las 15:00, Madrid), para que la comparación de la 3.4 sea justa. Se guarda **cifrada** con un commit en la rama `archivo` (decisión de `ARQUITECTURA.md`): el archivo es privado aunque el repo sea público. El commit diario quizá mantenga el repo activo (GitHub desactiva los workflows programados tras 60 días sin actividad), pero no está confirmado que cuenten los commits fuera de `main`.
+  **En marcha** desde la fusión del PR (código, pruebas y workflow hechos el 2026-10-12). Se marca `[x]` con un PR aparte cuando haya 7 ficheros seguidos en `archivo`.
   Aceptado: el workflow guarda un fichero por día sin intervención durante una semana.
 - [ ] **1.3 OMIE.** Descarga incremental (solo los días que faltan, 4 hilos como máximo) y lectura de `marginalpdbc` a una tabla con resolución nativa (24, 23, 25, 96, 92 o 100 periodos) y otra horaria. Guardado en Parquet. **Decidir y anotar en `ARQUITECTURA.md`** cómo se representan los días de 23 y 25 horas en las variables y en las decisiones 1 y 2 (el baseline descarta los de 23 y desalinea los de 25).
   Aceptado: pruebas con ficheros de ejemplo pequeños para cada número de periodos, incluidos los cambios de hora antes y después del 1-10-2025. Los precios horarios coinciden con los del baseline en los días sin cambio de hora.
@@ -55,8 +56,8 @@ El mejor modelo de la fase 2 (gradient boosting con meteorología), solo la medi
 - [ ] **3.2 JSON público** en GitHub Pages, con el esquema versionado de `ARQUITECTURA.md` (`p10` y `p90` a `null` hasta la fase 5).
 - [ ] **3.3 Error real acumulado.** Cada día, comparar las previsiones archivadas con el precio real publicado por OMIE y guardar el MAE por horizonte.
   Aceptado: tabla en `informes/` y en el JSON, actualizada sola.
-- [ ] **3.4 Comparación con EpexPredictor.** Nuestras previsiones publicadas frente a las suyas archivadas a la misma hora (1.2), las dos emitidas en tiempo real. MAE en D+2 y D+3 sobre las mismas horas, con IC por bloques en cuanto haya semanas suficientes.
-  Aceptado: tabla en `informes/`, actualizada sola.
+- [ ] **3.4 Comparación con EpexPredictor.** Nuestras previsiones publicadas frente a las suyas archivadas a la misma hora (1.2), las dos emitidas en tiempo real. MAE de D+2 a D+7 (su API sirve unos 7 días) sobre las mismas horas, con IC por bloques en cuanto haya semanas suficientes. La comparación es **privada**, como el archivo: su tabla se guarda cifrada en la rama `archivo` o solo en local, no en `informes/`.
+  Aceptado: tabla cifrada, actualizada sola.
 - [ ] **3.5 Modelos en sombra.** Poder ejecutar cada día uno o varios modelos candidatos junto al de producción, archivando sus previsiones sin publicarlas.
   Aceptado: un candidato de prueba archivado durante una semana junto al de producción.
 - [ ] **3.6 Avisos de fallo.** Si la previsión de un día falla, se abre un *issue* automáticamente.
@@ -102,7 +103,7 @@ Si una mejora no se acepta, se anota igualmente en `informes/` y se descarta.
 
 ## Fase 6. Integraciones
 - [ ] **6.1 Sensor de Home Assistant** instalable por HACS, en español, que lee el JSON público. En un repo aparte (HACS lo exige), con licencia MIT.
-- [ ] **6.2 Plantilla para evcc** y PR a su repositorio. evcc ya integra EpexPredictor (1–3 días): la plantilla tiene que aportar lo que él no da (D+4 a D+7 y cuantiles).
+- [ ] **6.2 Plantilla para evcc** y PR a su repositorio. evcc ya integra EpexPredictor: la plantilla tiene que aportar lo que él no da (cuantiles y, si la 3.4 lo confirma, mejor precisión de D+4 a D+7).
 - [ ] **6.3 Artículo** con el experimento y los resultados, para difundir en foros de Home Assistant, evcc y coche eléctrico.
 
 ## Fase 7. Después
