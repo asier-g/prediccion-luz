@@ -30,6 +30,7 @@ Previsión abierta del precio horario de la luz en España (mercado diario de OM
 - **Nunca se trabaja directamente en `main`.** El autor revisa y fusiona cada PR; no los fusiones tú.
 - **PR pequeños, que se revisen en unos 10 minutos.** Rellena todas las secciones de `.github/pull_request_template.md`. En "Dónde mirar con lupa", señala siempre el código que toque el corte temporal, la evaluación, las métricas o el parseo de OMIE.
 - En la tabla de decisiones de `ARQUITECTURA.md`, propón el motivo, pero márcalo como "(pendiente de revisar por el autor)": el autor lo reescribe con sus palabras.
+- **Ninguna fuente de datos nueva se fusiona sin su fila** en "Condiciones de uso de las fuentes" de `ARQUITECTURA.md`, con enlace, cita literal y fecha, marcada como "pendiente de revisar por el autor". Si las condiciones no permiten el uso comercial, dilo en el PR: el proyecto puede comercializarse más adelante.
 - `baseline/` está congelado: no se modifica, sirve de referencia.
 - Producción solo en CPU; los experimentos pesados pueden ir a GPU gratuita (Kaggle o Colab). Ver el principio 6 de `ARQUITECTURA.md`. Vigilar el coste de cálculo: el portátil del autor es un i5-1335U y las sesiones en la nube no son para entrenamientos de horas.
 - Documentación, comentarios y mensajes de commit en español.

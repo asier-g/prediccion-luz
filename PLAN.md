@@ -14,8 +14,9 @@ Pasos para llevar el baseline a producción. El porqué de cada paso está en `C
 - [x] `README.md`, `PLAN.md` y `ARQUITECTURA.md` (2026-10-11).
 - [x] Licencia (2026-10-12): el repo principal queda **sin licencia** (todos los derechos reservados) para no cerrar una comercialización futura. Las integraciones de la fase 5 irán en repos aparte con MIT.
 - [ ] 👤 Configurar el entorno en la nube de Claude Code: red **Custom** con `www.omie.es` y `*.open-meteo.com`, más la lista por defecto.
-- [ ] 👤 Pedir el token personal de ESIOS (consultasios@ree.es) y guardarlo como secreto, nunca en el repo. Leer sus condiciones de uso, también para uso comercial.
-- [ ] 👤 **Antes de la fase 2:** verificar las condiciones de reutilización de OMIE, incluido el uso comercial. Si no lo permiten, es el mayor riesgo del proyecto: no tiene sustituto.
+- [ ] 👤 Revisar la tabla "Condiciones de uso de las fuentes" de `ARQUITECTURA.md` y marcar como verificadas las filas cuya cita sea correcta.
+- [ ] 👤 Pedir el token personal de ESIOS (consultasios@ree.es) y guardarlo como secreto, nunca en el repo. En el mismo correo, preguntar si se pueden usar sus datos en un servicio de pago. Leer el aviso legal de ESIOS en el navegador y completar su fila.
+- [ ] 👤 **Antes de la fase 7:** pedir a OMIE confirmación por escrito de que su aviso legal permite el uso comercial (el texto dice "uso libre" sin excluirlo).
 
 ## Fase 1. Canal de datos
 - [ ] **1.1 Esqueleto del paquete.** `pyproject.toml`, paquete en `src/prediccion_luz/`, `pytest` y `ruff`. Workflow de GitHub Actions que pasa las pruebas en cada PR.

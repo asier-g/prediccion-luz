@@ -88,6 +88,27 @@ prediccion-luz/
   ```
 - **Atribución obligatoria** en la web y el JSON: Open-Meteo (CC BY 4.0) y OMIE.
 
+## Condiciones de uso de las fuentes
+Antes de añadir una fuente nueva, se registra aquí. El agente busca las condiciones, cita la frase exacta y marca la fila como "pendiente de revisar por el autor". El autor comprueba la cita y la marca como verificada.
+
+| Fuente | Uso en el proyecto | Uso gratuito actual | Uso comercial | Atribución | Estado |
+|---|---|---|---|---|---|
+| OMIE | Precio objetivo y variables | Sí | **Probablemente sí**: uso libre sin excluir el comercial (cita 1) | Obligatoria | Leído el 2026-10-12, pendiente de revisar por el autor. Confirmar por escrito antes de cobrar |
+| Open-Meteo, API gratuita | Meteorología prevista | Sí, si no hay suscripciones ni publicidad (cita 2) | **No**: plan de pago desde unos 29 $/mes (blog de Open-Meteo, sin confirmar en su web) | CC BY 4.0 | Leído el 2026-10-12, pendiente de revisar por el autor |
+| ECMWF, datos abiertos | Posible sustituto de Open-Meteo | Sí | **Sí** (cita 3), pero solo guarda las últimas ~12 ejecuciones: no hay histórico para entrenar | CC BY 4.0 | Leído el 2026-10-12, pendiente de revisar por el autor |
+| ESIOS (Red Eléctrica) | Previsiones de demanda, eólica y solar (tarea 3.1) | Sin confirmar | **Sin confirmar**. El aviso legal de ree.es prohíbe copiar su contenido con fines comerciales; el de ESIOS no se pudo leer sin navegador | Sin confirmar | Pendiente: 👤 leerlo en el navegador al pedir el token |
+| MIBGAS | Precio del gas (tarea 3.4) | Probablemente sí | **Dudoso**: uso libre citando la fuente, pero también exige autorización previa (cita 4) | Obligatoria | Leído el 2026-10-12, pendiente de revisar por el autor. Preguntar antes de usarlo |
+| TTF (ICE Endex) | Precio del gas, alternativa | Sin investigar | Probablemente de pago | Sin investigar | Sin investigar |
+| EpexPredictor, API pública | Solo comparación (tareas 1.5 y 2.4), no entra en el modelo | Sí, "uso razonable" y sin garantías | No aplica: no forma parte del producto | Citar el proyecto en la comparación | Leído el 2026-10-12. Avisar a su autor antes de publicar la comparación |
+
+**Citas literales:**
+1. OMIE, [aviso legal](https://www.omie.es/es/aviso-legal): "la Información de carácter público y gratuito puede ser utilizada libremente", respetando íntegramente su contenido original; "En caso de que se utilice la información de la página Web de OMIE en su formato original, se debe citar la fuente."
+2. Open-Meteo, [condiciones](https://open-meteo.com/en/terms): uso no comercial es "Using our service for private or non-profit websites or apps that do not have subscriptions or advertising"; es comercial "Operating websites or apps that have subscriptions or display advertisements".
+3. ECMWF, [datos abiertos](https://www.ecmwf.int/en/forecasts/datasets/open-data): "the data may be redistributed and used commercially, subject to appropriate attribution". Su licencia estándar parece limitar la redistribución: revisar antes de redistribuir los datos tal cual.
+4. MIBGAS, [aviso legal](https://www.mibgas.es/es/cccontent/aviso-legal): "Sin citar la fuente queda prohibida la reproducción total o parcial, explotación, distribución" y "Cualquier uso no autorizado previamente se considera un incumplimiento grave de los derechos de propiedad intelectual".
+
+**Idea si se comercializa:** empezar pronto a archivar cada día los datos abiertos del ECMWF para los puntos del modelo. Así habría un histórico propio, utilizable comercialmente, para no depender del plan de pago de Open-Meteo.
+
 ## Decisiones
 Formato: fecha, decisión, motivo. Las abiertas se resuelven en la tarea indicada.
 
