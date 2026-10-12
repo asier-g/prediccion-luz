@@ -44,6 +44,7 @@ prediccion-luz/
 4. **Una sola suite de evaluación.** Cualquier modelo, regla o variable nueva se mide con el mismo código, periodo y filas. Los resultados se guardan en `informes/` para que la comparación sea reproducible.
 5. **Las previsiones emitidas no se regeneran.** El error real publicado se calcula sobre lo que se publicó ese día, no sobre un recálculo posterior.
 6. **Producción en CPU y coste cero.** La previsión diaria y el reentreno mensual corren en GitHub Actions sin GPU. Los experimentos pesados (deep learning, búsqueda de hiperparámetros) pueden usar GPU gratuita (Kaggle o Colab), siempre que el modelo elegido se pueda reentrenar en CPU.
+7. **El modelo depende de variables, no de proveedores.** Cada fuente vive en su módulo de `fuentes/` y escribe en una tabla común (por ejemplo, `meteo_prevista` con una columna de proveedor). Las variables y los modelos nunca llaman a una fuente directamente. Así, cambiar de proveedor (Open-Meteo → ECMWF, ESIOS → ENTSO-E) es un experimento medible en la suite, no una reescritura.
 
 ## Datos
 

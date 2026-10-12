@@ -42,9 +42,10 @@ Pasos para llevar el baseline a producción. El porqué de cada paso está en `C
 
 ## Fase 3. Mejoras del modelo
 Cada mejora es un experimento que pasa por la suite de la 2.2. Se acepta solo si baja el MAE con el IC 95 % por debajo de cero frente al mejor modelo actual. Si no mejora, se anota igualmente en `informes/` y se descarta.
-- [ ] **3.1 Previsiones de ESIOS** (demanda, eólica, solar). Antes: comprobar qué horizontes publica Red Eléctrica y desde cuándo hay histórico de esas previsiones. Necesita el token de la fase 0.
+- [ ] **3.1 Previsiones de ESIOS** (demanda, eólica, solar). Antes: comprobar qué horizontes publica Red Eléctrica y desde cuándo hay histórico de esas previsiones. Necesita el token de la fase 0. Comprobar también sus condiciones de uso comercial y las de ENTSO-E (plataforma de transparencia), que publica previsiones parecidas para España, como alternativa.
 - [ ] **3.2 Festivos completos:** Semana Santa, festivos autonómicos ponderados por población y puentes.
-- [ ] **3.3 Más puntos meteorológicos**, o una rejilla resumida por región.
+- [ ] **3.3 ECMWF y más puntos meteorológicos.** Ingesta de los datos abiertos del ECMWF desde AWS (solo los campos necesarios, usando los `.index`; histórico útil desde mediados de 2024) y comparación con Open-Meteo en la suite, con más puntos o una rejilla resumida por región.
+  Aceptado: tabla en `informes/` con Open-Meteo frente a ECMWF sobre las mismas filas. Si el ECMWF no empeora con IC 95 %, pasar a él: permite uso comercial y su hora de emisión es exacta.
 - [ ] **3.4 Precio del gas** (MIBGAS o TTF). Antes: encontrar una fuente gratuita con histórico y condiciones de uso claras.
 - [ ] **3.5 Previsión probabilística.** Cuantiles 10, 50 y 90. Medir la cobertura y la pérdida *pinball*.
   Aceptado: cobertura del intervalo 10–90 entre el 75 % y el 85 % en la prueba.
