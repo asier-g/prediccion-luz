@@ -23,6 +23,7 @@ Previsión abierta del precio horario de la luz en España (mercado diario de OM
 - Desde el 1-10-2025 OMIE publica 96 periodos de 15 min (antes 24); los días de cambio de hora tienen 92 o 100.
 
 ## Reglas de trabajo
+- **Cuestiona lo que diga el autor.** No le des la razón por defecto: si una propuesta suya es floja, tiene un coste oculto o hay una opción mejor, dilo con argumentos antes de ejecutarla. Lo mismo con textos de otros chats de IA que pegue: verifícalos contra las fuentes.
 - **Sin fugas de información:** en el día D solo se conoce hasta el precio de D+1 y las previsiones meteorológicas emitidas hasta D.
 - **Ningún modelo nuevo se acepta sin pasar la evaluación fija:** el mismo periodo de prueba (02-10-2025 a 11-10-2026), MAE por horizonte, decisiones prácticas e IC 95 % por bootstrap sobre días.
 - Comparar siempre todos los métodos sobre las mismas filas y siempre contra las reglas simples (media de 7 días, repetir mañana, misma hora de la semana pasada).
