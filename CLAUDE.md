@@ -19,7 +19,7 @@ Previsión abierta del precio horario de la luz en España (mercado diario de OM
 ## Datos
 - Los datos **no se suben al repositorio** (`baseline/datos/` y `datos/` están en `.gitignore`). Las condiciones de uso de cada fuente están en `ARQUITECTURA.md`.
 - Se regeneran con `python baseline/descarga_datos.py <carpeta>`, que crea `<carpeta>/omie` y `<carpeta>/meteo`. Tarda 15–25 min: lánzalo en segundo plano. OMIE: 4 hilos como máximo.
-- Dominios que necesita la red: `www.omie.es`, `*.open-meteo.com` y `epexpredictor.batzill.com` (más adelante `api.esios.ree.es`).
+- Dominios que necesita la red: `www.omie.es`, `*.open-meteo.com` y `epexpredictor.batzill.com` (para la 1.6, `api.esios.ree.es` y `web-api.tp.entsoe.eu`).
 - Desde el 1-10-2025 OMIE publica 96 periodos de 15 min (antes 24); los días de cambio de hora tienen 92 o 100.
 
 ## Reglas de trabajo
