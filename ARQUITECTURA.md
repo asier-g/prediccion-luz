@@ -122,6 +122,6 @@ Formato: fecha, decisión, motivo. Las abiertas se resuelven en la tarea indicad
 |---|---|---|
 | 2026-10-11 | Python 3.12, paquete en `src/`, `pytest` y `ruff` | Estándar y suficiente; sin dependencias pesadas hasta que hagan falta (pendiente de revisar por el autor) |
 | 2026-10-11 | Parquet para los datos | Columnar, rápido con pandas o polars, y sin servidor (pendiente de revisar por el autor) |
-| 2026-10-11 | Los datos no se publican en el repositorio | Condiciones de reutilización de OMIE sin verificar (pendiente de revisar por el autor) |
+| 2026-10-11 | Los datos no se publican en el repositorio | OMIE permite el uso libre citando la fuente (ver "Condiciones de uso de las fuentes"), así que el motivo ya no es legal: el tamaño crece cada día y el código queda separado de los datos (pendiente de revisar por el autor) |
 | Abierta (1.1) | pandas o polars | Decidir al crear el esqueleto |
 | Abierta (4.1) | Dónde viven los datos en producción: caché de Actions, rama aparte o *release* | Depende de las condiciones de OMIE y del tamaño |
