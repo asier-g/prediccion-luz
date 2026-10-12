@@ -19,13 +19,13 @@ Previsión abierta del precio horario de la luz en España (mercado diario de OM
 ## Datos
 - Los datos **no se suben al repositorio** (`baseline/datos/` y `datos/` están en `.gitignore`). Las condiciones de uso de cada fuente están en `ARQUITECTURA.md`.
 - Se regeneran con `python baseline/descarga_datos.py <carpeta>`, que crea `<carpeta>/omie` y `<carpeta>/meteo`. Tarda 15–25 min: lánzalo en segundo plano. OMIE: 4 hilos como máximo.
-- Dominios que necesita la red: `www.omie.es` y `*.open-meteo.com` (más adelante `api.esios.ree.es`).
+- Dominios que necesita la red: `www.omie.es`, `*.open-meteo.com` y `epexpredictor.batzill.com` (más adelante `api.esios.ree.es`).
 - Desde el 1-10-2025 OMIE publica 96 periodos de 15 min (antes 24); los días de cambio de hora tienen 92 o 100.
 
 ## Reglas de trabajo
 - **Cuestiona lo que diga el autor.** No le des la razón por defecto: si una propuesta suya es floja, tiene un coste oculto o hay una opción mejor, dilo con argumentos antes de ejecutarla. Lo mismo con textos de otros chats de IA que pegue: verifícalos contra las fuentes.
-- **Sin fugas de información:** en el día D solo se conoce hasta el precio de D+1 y las previsiones meteorológicas emitidas hasta D.
-- **Ningún modelo nuevo se acepta sin pasar la evaluación fija:** el mismo periodo de prueba (02-10-2025 a 11-10-2026), MAE por horizonte, decisiones prácticas e IC 95 % por bootstrap sobre días.
+- **Sin fugas de información:** en el día D solo se conoce hasta el precio de D+1 y las previsiones meteorológicas emitidas hasta D. Esto vale para las variables **y para la ventana de entrenamiento**: el modelo que prevé desde D no puede haberse entrenado con objetivos posteriores a D+1 (el reentreno se agrupa por fecha de emisión, no por fecha prevista).
+- **Ningún modelo nuevo se acepta sin pasar la evaluación fija:** el mismo periodo de prueba (02-10-2025 a 11-10-2026), MAE por horizonte, decisiones prácticas e IC 95 % por bootstrap **por bloques** de días. El año fijo selecciona; la confirmación se hace en sombra (criterios y excepciones en `PLAN.md`, fase 4).
 - Comparar siempre todos los métodos sobre las mismas filas y siempre contra las reglas simples (media de 7 días, repetir mañana, misma hora de la semana pasada).
 - Una tarea de `PLAN.md` por rama y PR. En el mismo PR, márcala como hecha en `PLAN.md` y anota en `ARQUITECTURA.md` cualquier decisión de diseño nueva.
 - **Nunca se trabaja directamente en `main`.** El autor revisa y fusiona cada PR; no los fusiones tú.

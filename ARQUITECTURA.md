@@ -30,18 +30,20 @@ prediccion-luz/
 ├── tests/                # pruebas y ficheros de ejemplo pequeños
 ├── informes/             # resultados de la suite, versionados
 ├── web/                  # página estática
-├── integraciones/        # home-assistant/, evcc/
 ├── baseline/             # experimento original, congelado: no se modifica
 ├── datos/                # ignorado por git
 └── .github/workflows/    # pruebas, previsión diaria, reentreno, archivo de EpexPredictor
 ```
+
+- **Rama `archivo`:** lo que no se puede regenerar (previsiones de EpexPredictor, previsiones emitidas, meteorología usada al prever). Un commit diario con ficheros pequeños.
+- **Integraciones:** en repos aparte con licencia MIT. HACS exige un repo propio y lo de evcc es un PR a su repositorio.
 
 ## Principios
 
 1. **Todo dato lleva su momento de disponibilidad.** Además de la hora a la que se refiere, cada fila sabe cuándo se pudo conocer. Las variables se construyen con un corte: "lo que se sabía el día D a las 15:00 (Madrid)". Es la defensa principal contra las fugas.
 2. **Datos crudos inmutables, datos procesados regenerables.** Lo descargado se guarda tal cual; las tablas procesadas se pueden borrar y reconstruir.
 3. **Descargas incrementales e idempotentes.** Ejecutar dos veces no cambia nada ni vuelve a descargar.
-4. **Una sola suite de evaluación.** Cualquier modelo, regla o variable nueva se mide con el mismo código, periodo y filas. Los resultados se guardan en `informes/` para que la comparación sea reproducible.
+4. **Una sola suite de evaluación.** Cualquier modelo, regla o variable nueva se mide con el mismo código, periodo y filas. Los resultados se guardan en `informes/` para que la comparación sea reproducible. El año fijo sirve para **seleccionar**; la **confirmación** se hace con previsiones en sombra (ver `PLAN.md`, fase 4), porque reutilizar el mismo año en muchos experimentos sobreajusta a ese año.
 5. **Las previsiones emitidas no se regeneran.** El error real publicado se calcula sobre lo que se publicó ese día, no sobre un recálculo posterior.
 6. **Producción en CPU y coste cero.** La previsión diaria y el reentreno mensual corren en GitHub Actions sin GPU. Los experimentos pesados (deep learning, búsqueda de hiperparámetros) pueden usar GPU gratuita (Kaggle o Colab), siempre que el modelo elegido se pueda reentrenar en CPU.
 7. **El modelo depende de variables, no de proveedores.** Cada fuente vive en su módulo de `fuentes/` y escribe en una tabla común (por ejemplo, `meteo_prevista` con una columna de proveedor). Las variables y los modelos nunca llaman a una fuente directamente. Así, cambiar de proveedor (Open-Meteo → ECMWF, ESIOS → ENTSO-E) es un experimento medible en la suite, no una reescritura.
@@ -51,29 +53,32 @@ prediccion-luz/
 ### Tiempo
 - Se guarda en UTC y se convierte a `Europe/Madrid` solo para presentar y para variables de calendario.
 - OMIE se guarda con su resolución nativa (15 min desde el 1-10-2025, 60 min antes). El objetivo del modelo es el **precio horario**, media de los cuartos de hora.
-- Días de cambio de hora: 23 o 25 horas (92 o 100 cuartos). No se descartan.
+- Días de cambio de hora: 23 o 25 horas (92 o 100 cuartos). No se descartan. Cómo se representan en las variables (la variable "hora") y en las decisiones 1 y 2, que suponen días de 24 horas, se decide en la tarea 1.3.
 
 ### Tablas
 | Tabla | Clave | Columnas principales |
 |---|---|---|
 | `omie_precio` | inicio del periodo (UTC) | precio España (€/MWh), duración del periodo, fecha de publicación |
-| `meteo_prevista` | punto, variable, hora prevista (UTC), antelación k | valor, hora de emisión estimada |
-| `esios_prevision` | indicador, hora prevista, hora de emisión | valor |
-| `previsiones_emitidas` | fecha de emisión, hora prevista, versión del modelo | p10, p50, p90 |
+| `meteo_prevista` | proveedor, punto, variable, hora de emisión (UTC), hora prevista (UTC) | valor. La antelación k se calcula a partir de las dos horas. Para Open-Meteo, la hora de emisión es la que se determine en la tarea 1.5 |
+| `prevision_red` | proveedor (ESIOS, ENTSO-E), indicador, hora de emisión, hora prevista | valor |
+| `epexpredictor_archivo` | hora de captura, hora prevista | precio previsto |
+| `previsiones_emitidas` | fecha de emisión, hora prevista, modelo, en producción o en sombra | p10, p50, p90 |
 
 ### Disponibilidad en el día D
 - OMIE publica el precio de D+1 hacia las 13:00 de D.
-- Open-Meteo `previous_dayK`: **pendiente de verificar** (tarea 1.4 de `PLAN.md`).
-- ESIOS: pendiente de verificar al incorporarlo (tarea 3.1).
+- Open-Meteo `previous_dayK`: **pendiente de verificar** (tarea 1.5 de `PLAN.md`).
+- ESIOS y ENTSO-E: pendiente de verificar, incluido si guardan cada versión de la previsión (tarea 4.1).
 
 ## Modelo
 - **Horizontes:** D+2 a D+7, una previsión por hora.
 - **Reentreno:** mensual, con ventana creciente.
+- **En la evaluación, el reentreno se agrupa por fecha de emisión D:** el modelo que prevé desde D solo se entrena con objetivos conocidos en D (hasta D+1). El baseline agrupaba por fecha prevista T, lo que dejaba ver hasta 6 días de precios futuros al entrenar.
+- **En producción, el reentreno no se aprueba con la suite** (que evalúa el procedimiento, no un modelo concreto), sino comparando con el modelo actual en las 4 últimas semanas apartadas (tarea 5.3).
 - **Referencia obligatoria:** las reglas simples se evalúan siempre junto a cualquier modelo.
 - **Variables del baseline**, de partida: hora, día de la semana, mes, festivo, horizonte k, precio de D+1 a esa hora, media de 7 días a esa hora, misma hora de la semana anterior, nivel medio de D+1 y de 7 días, rango de D+1, y viento, sol y temperatura previstos con antelación k.
 
 ## Publicación
-- **Previsión diaria:** GitHub Actions, después de que OMIE publique D+1. Comprueba que el dato existe antes de prever.
+- **Previsión diaria:** GitHub Actions, después del corte y con margen, porque el cron de GitHub se retrasa a menudo. Comprueba que OMIE ha publicado D+1 antes de prever y reintenta si no. Archiva la previsión y la meteorología usada en la rama `archivo`.
 - **JSON público** (borrador del esquema, versión 1):
   ```json
   {
@@ -87,6 +92,7 @@ prediccion-luz/
     ]
   }
   ```
+  En la producción mínima (fase 3), `p10` y `p90` van a `null`.
 - **Atribución obligatoria** en la web y el JSON: Open-Meteo (CC BY 4.0) y OMIE.
 
 ## Condiciones de uso de las fuentes
@@ -96,11 +102,11 @@ Antes de añadir una fuente nueva, se registra aquí. El agente busca las condic
 |---|---|---|---|---|---|
 | OMIE | Precio objetivo y variables | Sí | **Probablemente sí**: uso libre sin excluir el comercial (cita 1) | Obligatoria | Leído el 2026-10-12, pendiente de revisar por el autor. Confirmar por escrito antes de cobrar |
 | Open-Meteo, API gratuita | Meteorología prevista | Sí, si no hay suscripciones ni publicidad (cita 2) | **No**: plan de pago desde unos 29 $/mes (blog de Open-Meteo, sin confirmar en su web) | CC BY 4.0 | Leído el 2026-10-12, pendiente de revisar por el autor |
-| ECMWF, datos abiertos | Posible sustituto de Open-Meteo | Sí | **Sí** (cita 3). Su portal solo guarda ~12 ejecuciones, pero las copias en AWS (desde 2023-01-18) y Azure (desde 2022-01-21, según Herbie) guardan el histórico. **El viento a 100 m y la radiación solar solo existen desde mediados de 2024** (ver nota) | CC BY 4.0 y condiciones de uso del ECMWF | Leído el 2026-10-12, pendiente de revisar por el autor. Leer sus condiciones de uso completas antes de cobrar |
-| ESIOS (Red Eléctrica) | Previsiones de demanda, eólica y solar (tarea 3.1) | Sin confirmar | **Sin confirmar**. El aviso legal de ree.es prohíbe copiar su contenido con fines comerciales; el de ESIOS no se pudo leer sin navegador | Sin confirmar | Pendiente: 👤 leerlo en el navegador al pedir el token |
-| MIBGAS | Precio del gas (tarea 3.4) | Probablemente sí | **Dudoso**: uso libre citando la fuente, pero también exige autorización previa (cita 4) | Obligatoria | Leído el 2026-10-12, pendiente de revisar por el autor. Preguntar antes de usarlo |
+| ECMWF, datos abiertos | Posible sustituto de Open-Meteo (tarea 4.4) | Sí | **Sí** (cita 3). Su portal solo guarda ~12 ejecuciones, pero las copias en AWS (desde 2023-01-18) y Azure (desde 2022-01-21, según Herbie) guardan el histórico. **El viento a 100 m y la radiación solar solo existen desde mediados de 2024** (ver nota) | CC BY 4.0 y condiciones de uso del ECMWF | Leído el 2026-10-12, pendiente de revisar por el autor. Leer sus condiciones de uso completas antes de cobrar |
+| ESIOS (Red Eléctrica) | Previsiones de demanda, eólica y solar (tarea 4.1) | Sin confirmar | **Sin confirmar**. El aviso legal de ree.es prohíbe copiar su contenido con fines comerciales; el de ESIOS no se pudo leer sin navegador | Sin confirmar | Pendiente: 👤 leerlo en el navegador al pedir el token |
+| MIBGAS | Precio del gas (tarea 4.5) | Probablemente sí | **Dudoso**: uso libre citando la fuente, pero también exige autorización previa (cita 4) | Obligatoria | Leído el 2026-10-12, pendiente de revisar por el autor. Preguntar antes de usarlo |
 | TTF (ICE Endex) | Precio del gas, alternativa | Sin investigar | Probablemente de pago | Sin investigar | Sin investigar |
-| EpexPredictor, API pública | Solo comparación (tareas 1.5 y 2.4), no entra en el modelo | Sí, "uso razonable" y sin garantías | No aplica: no forma parte del producto | Citar el proyecto en la comparación | Leído el 2026-10-12. Avisar a su autor antes de publicar la comparación |
+| EpexPredictor, API pública | Solo comparación (tareas 1.2 y 2.4), no entra en el modelo | Sí, "uso razonable" y sin garantías | No aplica: no forma parte del producto | Citar el proyecto en la comparación | Leído el 2026-10-12. El archivo de la rama `archivo` es público: avisar a su autor al empezarlo (tarea 1.2) |
 
 **Citas literales:**
 1. OMIE, [aviso legal](https://www.omie.es/es/aviso-legal): "la Información de carácter público y gratuito puede ser utilizada libremente", respetando íntegramente su contenido original; "En caso de que se utilice la información de la página Web de OMIE en su formato original, se debe citar la fuente."
@@ -123,5 +129,8 @@ Formato: fecha, decisión, motivo. Las abiertas se resuelven en la tarea indicad
 | 2026-10-11 | Python 3.12, paquete en `src/`, `pytest` y `ruff` | Estándar y suficiente; sin dependencias pesadas hasta que hagan falta (pendiente de revisar por el autor) |
 | 2026-10-11 | Parquet para los datos | Columnar, rápido con pandas o polars, y sin servidor (pendiente de revisar por el autor) |
 | 2026-10-11 | Los datos no se publican en el repositorio | OMIE permite el uso libre citando la fuente (ver "Condiciones de uso de las fuentes"), así que el motivo ya no es legal: el tamaño crece cada día y el código queda separado de los datos (pendiente de revisar por el autor) |
+| 2026-10-12 | Producción mínima (fase 3) antes de las mejoras del modelo | Lo único verdaderamente fuera de muestra son las previsiones que se emiten desde hoy, y el error real publicado solo se acumula desde que hay producción (pendiente de revisar por el autor) |
+| 2026-10-12 | Lo que no se puede regenerar se guarda en la rama `archivo` con un commit diario; lo regenerable (histórico de OMIE y Open-Meteo) se descarga y se guarda en la caché de Actions | El archivo es pequeño y no se puede recuperar si se pierde; el commit diario también evita que GitHub desactive los workflows programados tras 60 días sin actividad (pendiente de revisar por el autor) |
 | Abierta (1.1) | pandas o polars | Decidir al crear el esqueleto |
-| Abierta (4.1) | Dónde viven los datos en producción: caché de Actions, rama aparte o *release* | Depende de las condiciones de OMIE y del tamaño |
+| Abierta (1.3) | Cómo se representan los días de 23 y 25 horas en las variables y en las decisiones | Decidir al implementar OMIE |
+| Abierta (1.5) | Qué API de Open-Meteo se usa al prever en producción | Entrenar con una API y prever con otra puede mezclar ejecuciones o modelos distintos |
