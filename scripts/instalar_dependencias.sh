@@ -6,5 +6,8 @@ if [ "$CLAUDE_CODE_REMOTE" != "true" ]; then
   exit 0
 fi
 
-pip install -q -r "$CLAUDE_PROJECT_DIR/requirements.txt" || true
+DIR="${CLAUDE_PROJECT_DIR:-.}"
+pip install -q -r "$DIR/requirements.txt" || true
+# El paquete, en modo editable y sin dependencias: sus versiones están en requirements.txt.
+pip install -q -e "$DIR" --no-deps || true
 exit 0

@@ -23,7 +23,7 @@ Pasos para llevar el baseline a producción. El porqué de cada paso está en `C
 - [ ] 👤 **Antes de la fase 8:** pedir a OMIE confirmación por escrito de que su aviso legal permite el uso comercial (el texto dice "uso libre" sin excluirlo).
 
 ## Fase 1. Canal de datos y archivos
-- [ ] **1.1 Esqueleto del paquete.** `pyproject.toml`, paquete en `src/prediccion_luz/`, `pytest` y `ruff`. Workflow de GitHub Actions que pasa las pruebas en cada PR.
+- [x] **1.1 Esqueleto del paquete.** (2026-10-12, PR pendiente de enlazar) `pyproject.toml`, paquete en `src/prediccion_luz/`, `pytest` y `ruff`. Workflow de GitHub Actions que pasa las pruebas en cada PR.
   Aceptado: `pytest` pasa en local y en Actions.
 - [ ] **1.2 Archivo diario de EpexPredictor.** Workflow diario que guarda su previsión para España **a la hora de nuestro corte** (D a las 15:00, Madrid), para que la comparación de la 3.4 sea justa. Se guarda con un commit en la rama `archivo` (decisión de `ARQUITECTURA.md`), lo que además mantiene el repo activo: GitHub desactiva los workflows programados tras 60 días sin actividad. El archivo es público: avisar a su autor (*issue* o correo) al empezar.
   Aceptado: el workflow guarda un fichero por día sin intervención durante una semana.
