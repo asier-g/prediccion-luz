@@ -14,6 +14,8 @@ Previsión abierta del precio horario de la luz en España (mercado diario de OM
 ## Entorno
 - Python 3.12. Dependencias en `requirements.txt`.
 - **En local:** usar el entorno virtual `.venv/` (`.venv\Scripts\python` en Windows). `python -I` no ve los paquetes del usuario.
+- El paquete está en `src/prediccion_luz/` y se instala aparte, en modo editable y sin dependencias: `pip install -r requirements.txt` y luego `pip install -e . --no-deps`. `pyproject.toml` no declara dependencias: la única lista de versiones es `requirements.txt`.
+- Antes de cada commit: `ruff check .`, `ruff format .` y `pytest` (lo mismo que pasa el workflow `pruebas.yml` en cada PR). Las pruebas no pueden abrir conexiones de red (`tests/conftest.py`).
 - **En la nube de Claude Code:** un hook de `SessionStart` (`.claude/settings.json` → `scripts/instalar_dependencias.sh`) instala `requirements.txt` al arrancar. Si añades una dependencia, añádela a `requirements.txt` con la versión fijada.
 
 ## Datos

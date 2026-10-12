@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "prediccion-luz"
+version = "0.1.0"
+description = "Previsión del precio horario de la luz en España (OMIE) de D+2 a D+7"
+readme = "README.md"
+requires-python = ">=3.12"
+# Sin dependencias aquí: las versiones fijadas están en requirements.txt.
+# Se instala con `pip install -r requirements.txt` y `pip install -e . --no-deps`.
+dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/prediccion_luz"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+target-version = "py312"
+# baseline/ está congelado: no se toca ni se reformatea.
+extend-exclude = ["baseline"]
+
+[tool.ruff.lint]
+# DTZ prohíbe fechas sin zona horaria: todo se guarda en UTC (ARQUITECTURA.md).
+select = ["E", "F", "I", "B", "UP", "DTZ"]

@@ -35,6 +35,15 @@ python -m venv .venv
 .venv/Scripts/python baseline/prevision_omie.py datos/omie datos/meteo
 ```
 
+## Desarrollo
+```bash
+.venv/Scripts/pip install -r requirements.txt
+.venv/Scripts/pip install -e . --no-deps
+.venv/Scripts/python -m ruff check .
+.venv/Scripts/python -m ruff format --check .
+.venv/Scripts/python -m pytest
+```
+
 ## Fuentes de datos
 - Precios: [OMIE](https://www.omie.es/), mercado diario.
 - Meteorología prevista: [Open-Meteo](https://open-meteo.com/), Previous Runs API, con licencia [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
