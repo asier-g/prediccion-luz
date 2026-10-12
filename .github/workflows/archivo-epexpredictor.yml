@@ -1,0 +1,58 @@
+name: Archivo de EpexPredictor
+
+# Guarda cada día, cifrada, la previsión de EpexPredictor para España a la hora
+# de nuestro corte (D a las 15:00, Madrid), en la rama `archivo`. Tarea 1.2.
+
+on:
+  schedule:
+    # Tres intentos (UTC). El script solo captura entre las 15:00 y las 18:00 de
+    # Madrid y si aún no existe el fichero del día, así que el cambio de hora no
+    # afecta: en verano capturan las 13:07 y en invierno las 14:07.
+    - cron: "7 13 * * *"
+    - cron: "7 14 * * *"
+    - cron: "7 15 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Un solo grupo para todo lo que escriba en la rama `archivo`.
+concurrency:
+  group: archivo
+  cancel-in-progress: false
+
+jobs:
+  archivar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          ref: archivo
+          path: archivo
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+          pip install -e . --no-deps
+      - name: Capturar la previsión
+        env:
+          CLAVE_ARCHIVO: ${{ secrets.CLAVE_ARCHIVO }}
+        run: python -m prediccion_luz.fuentes.epexpredictor archivo/epexpredictor/ES
+      - name: Guardar en la rama archivo
+        working-directory: archivo
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Sin cambios"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "EpexPredictor ES $(TZ=Europe/Madrid date +%F)"
+          git push || (git pull --rebase && git push)

@@ -40,9 +40,10 @@ Previsión abierta del precio horario del mercado diario de OMIE (España) de **
 `baseline/datos/` incluye los datos ya descargados (2023 a 11-10-2026), si se copiaron. Si no, se regeneran con `baseline/descarga_datos.py` (15–25 min).
 
 ## Competencia a tener en cuenta
-- **EpexPredictor** (https://github.com/b3nn0/epexpredictor): gratis y abierto (BSD-3), ya cubre España a 1–3 días con LightGBM, Open-Meteo, carga y gas, y API pública sin garantías de servicio. **evcc ya lo integra de forma nativa.** MAE publicado para España a 1 día: 1,68 (unidades sin confirmar, probablemente ct/kWh) con meteorología observada, no prevista. Comprobado el 2026-10-12.
+- **EpexPredictor** (https://github.com/b3nn0/epexpredictor): gratis y abierto (BSD-3), ya cubre España con LightGBM, Open-Meteo, carga y gas, y API pública sin garantías de servicio. **evcc ya lo integra de forma nativa.** MAE publicado para España a 1 día: 1,68 (unidades sin confirmar, probablemente ct/kWh) con meteorología observada, no prevista. Comprobado el 2026-10-12.
+  - **Su API sirve unos 7 días para España, no 1–3** (comprobado el 2026-10-12: 671 cuartos de hora, hasta D+7). El error que publica solo llega a 3 días, así que no se sabe cómo de buena es su previsión de D+4 a D+7: eso lo dirá la comparación (tarea 3.4).
   - **Primera tarea:** guardar cada día su previsión y compararla con la propia.
-  - Si no se le gana en D+2 o D+3, diferenciarse en 4–7 días, cuantiles, precio final por tarifa e integración en español.
+  - Si no se le gana en ningún horizonte, diferenciarse en cuantiles, precio final por tarifa e integración en español.
 - **AleaSoft:** consultora de previsión para empresas desde 1999, en más de 45 mercados, MIBEL incluido. Corto, medio y largo plazo. Precios no publicados. Es la competencia si se comercializa para empresas.
 - Energy Price Forecast EU (sin España por ahora), Energyforecast.de (solo Alemania).
 

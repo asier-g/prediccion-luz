@@ -32,6 +32,8 @@ _Investigado: 2026-10-11_
 - un complemento nativo de Home Assistant en español;
 - una validación honesta y pública del error.
 
+> **Nota del 2026-10-12:** la API de EpexPredictor sirve para España unos 7 días (hasta D+7), no 1–3. El error que publica sigue siendo solo a 1–3 días, así que el horizonte de 4 a 7 días no está libre, pero no se sabe si su previsión ahí es buena. Lo dirá la comparación de la tarea 3.4.
+
 ## Viabilidad técnica
 
 **Experimento propio** (detalle en [experimento/](experimento/README.md)): un año de prueba sin tocar (oct. 2025 – oct. 2026), previendo cada hora de D+2 a D+7 solo con la información disponible el día D.
