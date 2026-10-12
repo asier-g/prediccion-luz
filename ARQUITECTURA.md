@@ -95,7 +95,7 @@ Antes de añadir una fuente nueva, se registra aquí. El agente busca las condic
 |---|---|---|---|---|---|
 | OMIE | Precio objetivo y variables | Sí | **Probablemente sí**: uso libre sin excluir el comercial (cita 1) | Obligatoria | Leído el 2026-10-12, pendiente de revisar por el autor. Confirmar por escrito antes de cobrar |
 | Open-Meteo, API gratuita | Meteorología prevista | Sí, si no hay suscripciones ni publicidad (cita 2) | **No**: plan de pago desde unos 29 $/mes (blog de Open-Meteo, sin confirmar en su web) | CC BY 4.0 | Leído el 2026-10-12, pendiente de revisar por el autor |
-| ECMWF, datos abiertos | Posible sustituto de Open-Meteo | Sí | **Sí** (cita 3), pero solo guarda las últimas ~12 ejecuciones: no hay histórico para entrenar | CC BY 4.0 | Leído el 2026-10-12, pendiente de revisar por el autor |
+| ECMWF, datos abiertos | Posible sustituto de Open-Meteo | Sí | **Sí** (cita 3). Su portal solo guarda ~12 ejecuciones, pero las copias en AWS (desde 2023-01-18) y Azure (desde 2022-01-21, según Herbie) guardan el histórico. **El viento a 100 m y la radiación solar solo existen desde mediados de 2024** (ver nota) | CC BY 4.0 y condiciones de uso del ECMWF | Leído el 2026-10-12, pendiente de revisar por el autor. Leer sus condiciones de uso completas antes de cobrar |
 | ESIOS (Red Eléctrica) | Previsiones de demanda, eólica y solar (tarea 3.1) | Sin confirmar | **Sin confirmar**. El aviso legal de ree.es prohíbe copiar su contenido con fines comerciales; el de ESIOS no se pudo leer sin navegador | Sin confirmar | Pendiente: 👤 leerlo en el navegador al pedir el token |
 | MIBGAS | Precio del gas (tarea 3.4) | Probablemente sí | **Dudoso**: uso libre citando la fuente, pero también exige autorización previa (cita 4) | Obligatoria | Leído el 2026-10-12, pendiente de revisar por el autor. Preguntar antes de usarlo |
 | TTF (ICE Endex) | Precio del gas, alternativa | Sin investigar | Probablemente de pago | Sin investigar | Sin investigar |
@@ -107,7 +107,12 @@ Antes de añadir una fuente nueva, se registra aquí. El agente busca las condic
 3. ECMWF, [datos abiertos](https://www.ecmwf.int/en/forecasts/datasets/open-data): "the data may be redistributed and used commercially, subject to appropriate attribution". Su licencia estándar parece limitar la redistribución: revisar antes de redistribuir los datos tal cual.
 4. MIBGAS, [aviso legal](https://www.mibgas.es/es/cccontent/aviso-legal): "Sin citar la fuente queda prohibida la reproducción total o parcial, explotación, distribución" y "Cualquier uso no autorizado previamente se considera un incumplimiento grave de los derechos de propiedad intelectual".
 
-**Idea si se comercializa:** empezar pronto a archivar cada día los datos abiertos del ECMWF para los puntos del modelo. Así habría un histórico propio, utilizable comercialmente, para no depender del plan de pago de Open-Meteo.
+**Nota sobre el ECMWF** (comprobado el 2026-10-12 en los ficheros `.index` del bucket `s3://ecmwf-forecasts`, ejecución de las 00z, paso de 48 h):
+- 2023-02-01 (0,4°) y 2024-03-01 (0,25°): hay viento a 10 m (`10u`, `10v`) y temperatura (`2t`), pero **no** viento a 100 m (`100u`, `100v`) ni radiación solar (`ssrd`).
+- 2024-08-01, 2024-09-01 y 2025-03-01: ya están `100u`, `100v` y `ssrd`.
+- Por tanto, el histórico útil para este modelo empieza entre marzo y agosto de 2024: unos 2 años, no 3–4.
+
+**Idea si se comercializa:** usar el histórico del ECMWF en AWS como fuente meteorológica utilizable comercialmente, en lugar del plan de pago de Open-Meteo. Inconvenientes: los ficheros son globales (hay que descargar solo los campos necesarios usando los `.index`), el volumen total ronda los 100–200 GB (ESTIMACIÓN) y AWS limita la frecuencia de peticiones.
 
 ## Decisiones
 Formato: fecha, decisión, motivo. Las abiertas se resuelven en la tarea indicada.
