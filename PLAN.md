@@ -15,9 +15,10 @@ Pasos para llevar el baseline a producción. El porqué de cada paso está en `C
 - [x] Repositorio, baseline, `CONTEXTO-PROYECTO.md` y `CLAUDE.md` (2026-10-11).
 - [x] `README.md`, `PLAN.md` y `ARQUITECTURA.md` (2026-10-12).
 - [x] Licencia (2026-10-12): el repo principal queda **sin licencia** (todos los derechos reservados) para no cerrar una comercialización futura. Las integraciones de la fase 6 irán en repos aparte con MIT.
-- [ ] 👤 Configurar el entorno en la nube de Claude Code: red **Custom** con `www.omie.es`, `*.open-meteo.com` y `epexpredictor.batzill.com`, más la lista por defecto. Para la 1.6, añadir `api.esios.ree.es` y `web-api.tp.entsoe.eu`.
-- [ ] 👤 Revisar la tabla "Condiciones de uso de las fuentes" de `ARQUITECTURA.md` y marcar como verificadas las filas cuya cita sea correcta.
-- [ ] 👤 Pedir el token personal de ESIOS con el formulario de su web y guardarlo como secreto, nunca en el repo. Aparte, por correo a la dirección de contacto de su web, preguntar si se pueden usar sus datos en un servicio de pago. Leer el aviso legal de ESIOS en el navegador y completar su fila.
+- [x] 👤 Configurar el entorno en la nube de Claude Code: red **Custom** con `www.omie.es`, `*.open-meteo.com` y `epexpredictor.batzill.com`, más la lista por defecto. Para la 1.6, añadir `api.esios.ree.es` y `web-api.tp.entsoe.eu`.
+- [ ] 👤 Revisar la tabla "Condiciones de uso de las fuentes" de `ARQUITECTURA.md` y marcar como verificadas las filas cuya cita sea correcta. Hechas el 2026-10-12: OMIE, Open-Meteo, ECMWF y MIBGAS. Falta ESIOS.
+- [x] 👤 Pedir el token personal de ESIOS con el formulario de su web y guardarlo fuera del repo (2026-10-12).
+- [ ] 👤 ESIOS: por correo a la dirección de contacto de su web, preguntar si se pueden usar sus datos en un servicio de pago. Leer su aviso legal en el navegador y completar su fila.
 - [ ] 👤 Registrarse en la plataforma de transparencia de ENTSO-E y pedir el token de su API (lo necesita la 1.6). Guardarlo como secreto.
 - [ ] 👤 **Antes de la fase 8:** pedir a OMIE confirmación por escrito de que su aviso legal permite el uso comercial (el texto dice "uso libre" sin excluirlo).
 
