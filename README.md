@@ -42,6 +42,7 @@ python -m venv .venv
 .venv/Scripts/python -m ruff check .
 .venv/Scripts/python -m ruff format --check .
 .venv/Scripts/python -m pytest
+.venv/Scripts/python -m prediccion_luz.fuentes.omie datos   # precios de OMIE: baja solo lo que falta
 ```
 
 ## Fuentes de datos
