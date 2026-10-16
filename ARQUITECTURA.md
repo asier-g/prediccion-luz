@@ -53,19 +53,26 @@ prediccion-luz/
 ### Tiempo
 - Se guarda en UTC y se convierte a `Europe/Madrid` solo para presentar y para variables de calendario.
 - OMIE se guarda con su resolución nativa (15 min desde el 1-10-2025, 60 min antes). El objetivo del modelo es el **precio horario**, media de los cuartos de hora.
-- Días de cambio de hora: 23 o 25 horas (92 o 100 cuartos). No se descartan. Cómo se representan en las variables (la variable "hora") y en las decisiones 1 y 2, que suponen días de 24 horas, se decide en la tarea 1.3.
+- Días de cambio de hora: 23 o 25 horas (92 o 100 cuartos). No se descartan ni se rellenan: las tablas tienen todas las horas reales, con clave UTC. Cómo se tratan en las variables y en las decisiones 1 y 2 está en "Decisiones" (tarea 1.3).
+
+### OMIE
+- Se descarga con `python -m prediccion_luz.fuentes.omie datos`. Primero pide el listado de OMIE (una petición), que dice qué versión de cada día está publicada, y después baja solo los ficheros que no están en local, con 4 hilos como máximo.
+- **OMIE corrige algunos días** y entonces solo publica la versión corregida (`marginalpdbc_AAAAMMDD.2`, `.3`): 20230528, 20251030 y 20251127 hasta octubre de 2026. El baseline solo pedía `.1` y perdía esos días sin avisar.
+- Crudo inmutable en `datos/omie/marginalpdbc/AAAA/` con el nombre de OMIE. Una corrección se guarda junto a la versión anterior y las tablas usan la más alta.
+- Cada fichero se valida antes de guardarse: cabecera y pie, fecha de cada fila, periodos consecutivos y número de periodos esperado para esa fecha.
 
 ### Tablas
 | Tabla | Clave | Columnas principales |
 |---|---|---|
-| `omie_precio` | inicio del periodo (UTC) | precio España (€/MWh), duración del periodo, fecha de publicación |
+| `omie_precio` | inicio del periodo (UTC) | precio España (€/MWh), duración del periodo (60 o 15 min), día de entrega (Madrid), periodo, versión del fichero, `disponible_utc` (víspera a las 13:00 de Madrid). En `datos/omie/omie_precio.parquet` |
+| `omie_precio_horario` | inicio de la hora (UTC) | precio España (media de los periodos de la hora), día de entrega, hora local (0–23; se repite la 2 en el día de 25 h), número de periodos, versión, `disponible_utc`. En `datos/omie/omie_precio_horario.parquet` |
 | `meteo_prevista` | proveedor, punto, variable, hora de emisión (UTC), hora prevista (UTC) | valor. La antelación k se calcula a partir de las dos horas. Para Open-Meteo, la hora de emisión es la que se determine en la tarea 1.5 |
 | `prevision_red` | proveedor (ESIOS, ENTSO-E), indicador, hora de emisión, hora prevista | valor |
 | `epexpredictor_archivo` | hora de captura, hora prevista | precio previsto (€/MWh, cuartos de hora), `knownUntil` (hasta dónde el precio ya es real). Un fichero cifrado por día con la respuesta tal cual |
 | `previsiones_emitidas` | fecha de emisión, hora prevista, modelo, en producción o en sombra | p10, p50, p90 |
 
 ### Disponibilidad en el día D
-- OMIE publica el precio de D+1 hacia las 13:00 de D.
+- OMIE publica el precio de D+1 hacia las 13:00 de D. Es la hora que se guarda en `disponible_utc`: el listado no da la hora real de publicación, porque su "Modificado" cambia si el fichero se vuelve a subir (`20251001.1` figura modificado el mismo 1-10 a las 14:26). En los días corregidos, la víspera se conocía la versión `.1`, que ya no existe; sus valores pueden diferir algo de los guardados.
 - Open-Meteo `previous_dayK`: **pendiente de verificar** (tarea 1.5 de `PLAN.md`).
 - ESIOS y ENTSO-E: pendiente de verificar, incluido si guardan cada versión de la previsión (tarea 1.6).
 
@@ -142,6 +149,9 @@ Formato: fecha, decisión, motivo. Las abiertas se resuelven en la tarea indicad
 | 2026-10-12 | Se guarda la respuesta de EpexPredictor tal cual (resolución nativa, €/MWh, UTC), dentro de un sobre con la URL y la hora de captura, y nunca se sobrescribe | Principio 2: datos crudos inmutables. Lo que se publicó ese día no se puede volver a descargar (pendiente de revisar por el autor) |
 | 2026-10-12 | HTTP con `urllib` de la biblioteca estándar, sin `requests` | Una petición al día no justifica otra dependencia (pendiente de revisar por el autor) |
 | 2026-10-12 | `tzdata` en `requirements.txt` | En Windows, `zoneinfo` no encuentra `Europe/Madrid` sin él (pendiente de revisar por el autor) |
-| Abierta (1.3) | Cómo se representan los días de 23 y 25 horas en las variables y en las decisiones | Decidir al implementar OMIE |
+| 2026-10-16 | Días de 23 y 25 horas. **Objetivo:** se prevé cada hora real (23, 24 o 25 por día) y el JSON publica las que existen; la variable `hora` es la hora local, la misma (2) para las dos horas repetidas. **Variables con retardo** (precio de D+1 a esa hora, media de 7 días, semana pasada): salen de un perfil de 24 horas locales por día de referencia; si una hora está repetida, se usa la media de las dos, y si falta (la 2 del día de 23 h), la media de la 1 y la 3. Los niveles y el rango, sobre las horas reales. **Decisión 1:** ventanas de 4 horas reales seguidas dentro del día (20, 21 o 22 candidatas). **Decisión 2:** media de las horas reales del día. Las dos exigen el día completo, no 24 horas. El perfil se implementa en la 2.1 | Descartar esos días (como el baseline con los de 23 h) deja sin previsión 2 días al año, y rellenarlos hasta 24 horas inventaría o borraría una hora que sí existe y que el JSON debe publicar. El perfil de 24 horas solo se usa para las variables, que necesitan un valor por hora local. Las ventanas de horas reales son las que vive quien carga el coche ese día (pendiente de revisar por el autor) |
+| 2026-10-16 | OMIE: la descarga se guía por el listado de OMIE, el crudo se guarda con el nombre y la versión de OMIE, y las tablas Parquet se reconstruyen enteras desde el crudo en cada ejecución | Pedir siempre `.1` pierde los días corregidos (3 hasta hoy). El listado cuesta una petición y detecta también las correcciones futuras. Reconstruir las tablas tarda segundos con unos 1.400 ficheros y evita la lógica de actualizar el Parquet (pendiente de revisar por el autor) |
+| 2026-10-16 | `disponible_utc` de OMIE = la víspera a las 13:00 de Madrid, también en los días corregidos | El listado no da la hora real de publicación. En los días corregidos, la versión que se conocía la víspera ya no existe; son 3 días de unos 1.400 y la 2.3 puede marcarlos con la columna `version` (pendiente de revisar por el autor) |
+| 2026-10-16 | Las tablas de precio guardan solo España, no Portugal | Es el único objetivo del modelo y el crudo conserva Portugal si alguna vez hace falta (pendiente de revisar por el autor) |
 | Abierta (2.2) | Margen δ de "no empeora" y semanas de sombra (provisional: δ = 1 €/MWh y 8 semanas) | Calibrarlos con la variabilidad real de las diferencias diarias de error que mida la suite |
 | Abierta (1.5) | Qué API de Open-Meteo se usa al prever en producción | Entrenar con una API y prever con otra puede mezclar ejecuciones o modelos distintos |
